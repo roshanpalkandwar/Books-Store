@@ -16,7 +16,8 @@ const userSchema = new Schema(
     },
     UserId: {
       type: String
-    }
+    },
+    
   },
   {
     timestamps: true
