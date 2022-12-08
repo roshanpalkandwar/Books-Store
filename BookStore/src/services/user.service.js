@@ -62,11 +62,13 @@ export const resetPassword=async(body)=>{
   const hashPassword=await bcrypt.hash(body.Password,saltRounds);
   body.Password=hashPassword;
   const data=await User.findOneAndUpdate(
+    
     {EmailId:body.EmailId},
     body,
     {
       new:true
     }
   );
+  console.log("reset data========================>",data)
   return data;
 };
