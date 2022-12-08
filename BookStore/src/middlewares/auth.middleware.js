@@ -12,7 +12,7 @@ export const userAuth = async (req, res, next) => {
       };
     bearerToken = bearerToken.split(' ')[1];
     const user  = await jwt.verify(bearerToken, process.env.SECRET_KEY); 
-    req.body.admin_user_id=user.EmailId;
+    req.body.userId=user.EmailId;
     next();
   } catch (error) {
     res.status(HttpStatus.UNAUTHORIZED).json({

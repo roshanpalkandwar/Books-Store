@@ -10,7 +10,7 @@ const bookSchema = new Schema(
       admin_user_id: { type: String, required: true},
       bookName: { type: String, required: true},
       author: { type: String, required: true},
-      quantity: { type: String, optional: true},
+      quantity: { type: String, required: true},
       price: { type: String, required: true},
       
     },
