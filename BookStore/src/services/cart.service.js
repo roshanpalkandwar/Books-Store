@@ -36,7 +36,7 @@ export const addBookToCart = async (EmailId, params_book_id) => {
                 }
             });
             if (bookFound == false) {
-                userCart.books.push(bookInfo)
+                userCart.books.push(bookInfo)     
                 console.log("added a new book");
                 totalPrice = totalPrice + bookInfo.price;
                 console.log("Cart Total after adding the book:", totalPrice);
@@ -48,3 +48,32 @@ export const addBookToCart = async (EmailId, params_book_id) => {
         throw new Error("Book doesn't Exist");
     }
 }
+
+//remove book from cart
+export const removeBook = async (EmailId, params_book_id) => {
+    const checkCart = await Cart.findOne({ userId: EmailId });
+    if (checkCart) {
+        console.log("If User Exists");
+        let bookFound = false
+        checkCart.books.forEach(element => {
+            if (element.productId == params_book_id) {
+                //element.quantity = element.quantity - 1
+                console.log("If Book found");
+                let indexOfElement = checkCart.books.indexOf(element)
+                checkCart.books.splice(indexOfElement, 1)
+                bookFound = true
+            }
+        });
+        console.log("After deleting the book",checkCart.books);
+        if (bookFound == false) {
+            console.log("If Book not found");
+            // throw new Error("Book not in the cart");
+            throw new Error("User Book doesn't exist");
+        }
+
+        const updatedCart = await Cart.findOneAndUpdate({ userId: EmailId}, { books: checkCart.books }, { new: true })
+        return updatedCart
+    } else {
+        throw new Error("User cart doesn't exist");
+    }
+};

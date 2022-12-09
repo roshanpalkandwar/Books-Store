@@ -15,3 +15,17 @@ export const addBookToCart = async (req, res, next) => {
     }
 };
 
+//Controller to Remove a book from cart
+export const removeBook = async (req, res, next) => {
+    try {
+        const data = await cartService.removeBook(req.body.EmailId, req.params._id);
+        res.status(HttpStatus.CREATED).json({
+            code: HttpStatus.CREATED,
+            data: data,
+            message: 'Book removed successfully'
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
