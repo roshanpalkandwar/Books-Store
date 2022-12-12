@@ -1,3 +1,4 @@
+import { books } from 'googleapis/build/src/apis/books';
 import Book from '../models/Book.model';
 import Cart from '../models/cart.model';
 
@@ -51,18 +52,23 @@ export const addBookToCart = async (EmailId, params_book_id) => {
 
 //remove book from cart
 export const removeBook = async (EmailId, params_book_id) => {
-    const checkCart = await Cart.findOne({ userId: EmailId });
+    const checkCart = await Cart.findOne({ userId:EmailId });
     if (checkCart) {
         console.log("If User Exists");
         let bookFound = false
+        let totalPrice = 0
+       let bookqunitity=0
         checkCart.books.forEach(element => {
             if (element.productId == params_book_id) {
-                //element.quantity = element.quantity - 1
+                element.quantity = element.quantity -= 1
+                bookqunitity=element.quantity 
+                totalPrice = totalPrice - (element.price * element.quantity);
+            
                 console.log("If Book found");
-                let indexOfElement = checkCart.books.indexOf(element)
-                checkCart.books.splice(indexOfElement, 1)
+               // let indexOfElement = checkCart.books.indexOf(element)
+                checkCart.books.splice(bookqunitity, 1)
                 bookFound = true
-            }
+            } 
         });
         console.log("After deleting the book",checkCart.books);
         if (bookFound == false) {
@@ -71,9 +77,10 @@ export const removeBook = async (EmailId, params_book_id) => {
             throw new Error("User Book doesn't exist");
         }
 
-        const updatedCart = await Cart.findOneAndUpdate({ userId: EmailId}, { books: checkCart.books }, { new: true })
+        const updatedCart = await Cart.findOneAndUpdate({ userId: EmailId}, { books: checkCart.books,cart_total: totalPrice}, { new: true })
         return updatedCart
     } else {
         throw new Error("User cart doesn't exist");
     }
 };
+
