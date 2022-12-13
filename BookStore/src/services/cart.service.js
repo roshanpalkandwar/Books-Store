@@ -60,15 +60,16 @@ export const removeBook = async (EmailId, params_book_id) => {
        let bookqunitity=0
         checkCart.books.forEach(element => {
             if (element.productId == params_book_id) {
-                element.quantity = element.quantity -= 1
+                element.quantity =   element.quantity -= 1
                 bookqunitity=element.quantity 
-                totalPrice = totalPrice - (element.price * element.quantity);
+                totalPrice =  (element.price * element.quantity) - totalPrice ;
             
                 console.log("If Book found");
                // let indexOfElement = checkCart.books.indexOf(element)
                 checkCart.books.splice(bookqunitity, 1)
                 bookFound = true
             } 
+           
         });
         console.log("After deleting the book",checkCart.books);
         if (bookFound == false) {
@@ -91,25 +92,31 @@ export const removeBooks = async (EmailId, params_book_id) => {
     if (checkCart) {
         console.log("If User Exists");
         let bookFound = false
-      
+        let totalPrice = 0
+        
        
         checkCart.books.forEach(element => {
             if (element.productId == params_book_id) {
                 
+               
+                totalPrice = totalPrice - totalPrice;
+            
                 console.log("If Book found");
                 let indexOfElement = checkCart.books.indexOf(element)
                 checkCart.books.splice(indexOfElement, 1)
                 bookFound = true
+                console.log("After deleting the book",checkCart.books);
             } 
+            
         });
-        console.log("After deleting the book",checkCart.books);
+
         if (bookFound == false) {
             console.log("If Book not found");
             // throw new Error("Book not in the cart");
             throw new Error("User Book doesn't exist");
         }
 
-        const updatedCarts = await Cart.findOneAndUpdate({ userId: EmailId},  {books:checkCart.books}, { new: true })
+        const updatedCarts = await Cart.findOneAndUpdate({ userId: EmailId},  {books:checkCart.books,cart_total: totalPrice}, { new: true })
         return updatedCarts
     } else {
         throw new Error("User cart doesn't exist");
