@@ -2,7 +2,7 @@ import HttpStatus from 'http-status-codes';
 import * as BookService from '../services/Book.service';
 
 
-
+// get All Book To controoler
 export const getAllBook = async (req, res, next) => {
     try {
       const data = await BookService.getAllBook(req.body.admin_user_id);
@@ -19,6 +19,8 @@ export const getAllBook = async (req, res, next) => {
     }
 };
   
+
+// get Praticular Book To controoler By Id
 export const getBook = async (req, res, next) => {
     try {
       const data = await BookService.getBook(req.params._id,req.body.admin_user_id);
