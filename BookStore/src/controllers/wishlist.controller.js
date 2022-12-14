@@ -18,10 +18,16 @@ export const addBookToWishlist = async (req, res, next) => {
     }
 };
 
+<<<<<<< HEAD
 
 export const removeBookFromWishlist = async (req, res, next) => {
     try {
         const data = await wishlistService.removeBookFromWishlist(req.body.email, req.params._id);
+=======
+export const removeBookFromWishlist = async (req, res, next) => {
+    try {
+        const data = await wishlistService.removeBookFromWishlist(req.body.EmailId, req.params._id);
+>>>>>>> 5.Whishlist-Operation
         res.status(HttpStatus.CREATED).json({
             code: HttpStatus.CREATED,
             data: data,
