@@ -4,7 +4,6 @@ import { userAuth } from '../middlewares/auth.middleware';
 
 const router = express.Router();
 
-//router to get all book
 router.get('', userAuth, BookController.getAllBook);
 
 //router to get a particular Book by id
