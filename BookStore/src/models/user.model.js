@@ -15,12 +15,12 @@ const userSchema = new Schema(
       type: String
     }
 
-    
-    
+
+
   },
   {
     timestamps: true
   }
 );
 
-export default model('User', userSchema,'User');
+export default model('User', userSchema, 'User');
