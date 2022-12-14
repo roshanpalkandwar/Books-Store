@@ -17,3 +17,17 @@ export const addBookToWishlist = async (req, res, next) => {
         })
     }
 };
+
+
+export const removeBookFromWishlist = async (req, res, next) => {
+    try {
+        const data = await wishlistService.removeBookFromWishlist(req.body.email, req.params._id);
+        res.status(HttpStatus.CREATED).json({
+            code: HttpStatus.CREATED,
+            data: data,
+            message: 'Book removed from Wishlist successfully'
+        });
+    } catch (error) {
+        next(error);
+    }
+};

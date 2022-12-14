@@ -7,6 +7,10 @@ const router = express.Router();
 //route to post book to wishlist
 router.post('/:_id', userAuth, wishlistController.addBookToWishlist);
 
+//route to remove book from wishlist
+router.put('/:_id', userAuth, wishlistController.removeBookFromWishlist);
+
+
 
 
 export default router;

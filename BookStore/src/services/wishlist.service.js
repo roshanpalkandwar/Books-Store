@@ -43,3 +43,30 @@ export const addBookToWishlist = async (email, params_book_id) => {
         throw new Error("Book doesn't Exist");
     }
 }
+
+//remove book from wishlist
+export const removeBookFromWishlist = async (email, params_book_id) => {
+    const userWishlist = await Wishlist.findOne({ userId: email });
+    if (userWishlist) {
+        console.log("If User Exists");
+        let bookFound = false
+        userWishlist.books.forEach(element => {
+            if (element.productId == params_book_id) {
+                console.log("If Book found");
+                let indexOfElement = userWishlist.books.indexOf(element)
+                userWishlist.books.splice(indexOfElement, 1)
+                bookFound = true
+            }
+        });
+        console.log("After deleting the book",userWishlist.books);
+        if (bookFound == false) {
+            console.log("If Book not found");
+            // throw new Error("Book not in the cart");
+        }
+
+        const updatedWishlist = await Wishlist.findOneAndUpdate({ userId: email}, { books: userWishlist.books }, { new: true })
+        return updatedWishlist;
+    } else {
+        throw new Error("User cart doesn't exist");
+    }
+};
