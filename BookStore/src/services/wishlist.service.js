@@ -3,11 +3,11 @@ import Book from '../models/Book.model';
 
 
 //add books to wishlist
-export const addBookToWishlist = async (email, params_book_id) => {
+export const addBookToWishlist = async (EmailId, params_book_id) => {
     const checkBook = await Book.findOne({ _id: params_book_id });
     console.log("Check book", checkBook);
     if (checkBook) {
-        const userWishlist = await Wishlist.findOne({ userId: email });
+        const userWishlist = await Wishlist.findOne({ userId: EmailId });
         console.log("Book Exists");
         let bookInfo = {
             'productId': checkBook._id,
@@ -20,7 +20,7 @@ export const addBookToWishlist = async (email, params_book_id) => {
         console.log("This is the typeof bookInfo.price", typeof bookInfo.price)
         if (userWishlist == null) {
             console.log("For new User");
-            const createWishlist = await Wishlist.create({ userId: email, books: [bookInfo], cart_total: checkBook.price })
+            const createWishlist = await Wishlist.create({ userId:EmailId, books: [bookInfo], cart_total: checkBook.price })
             return createWishlist;
         } else {
             console.log("For Existing User");
@@ -36,10 +36,38 @@ export const addBookToWishlist = async (email, params_book_id) => {
                 userWishlist.books.push(bookInfo)
                 console.log("added a new book");
             }
-            let wishlistView = await Wishlist.findOneAndUpdate({ userId: email }, { books: userWishlist.books, cart_total: totalPrice }, { new: true })
+            let wishlistView = await Wishlist.findOneAndUpdate({ userId: EmailId }, { books: userWishlist.books, cart_total: totalPrice }, { new: true })
             return wishlistView;
         }
     } else {
         throw new Error("Book doesn't Exist");
     }
 }
+
+
+//remove book from wishlist
+export const removeBookFromWishlist = async (EmailId, params_book_id) => {
+    const userWishlist = await Wishlist.findOne({ userId: EmailId });
+    if (userWishlist) {
+        console.log("If User Exists");
+        let bookFound = false
+        userWishlist.books.forEach(element => {
+            if (element.productId == params_book_id) {
+                console.log("If Book found");
+                let indexOfElement = userWishlist.books.indexOf(element)
+                userWishlist.books.splice(indexOfElement, 1)
+                bookFound = true
+            }
+        });
+        console.log("After deleting the book",userWishlist.books);
+        if (bookFound == false) {
+            console.log("If Book not found");
+            // throw new Error("Book not in the cart");
+        }
+
+        const updatedWishlist = await Wishlist.findOneAndUpdate({ userId: EmailId}, { books: userWishlist.books }, { new: true })
+        return updatedWishlist;
+    } else {
+        throw new Error("User cart doesn't exist");
+    }
+};
